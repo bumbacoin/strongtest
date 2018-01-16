@@ -939,6 +939,7 @@ void createConf()
             + "\n#(0=off, 1=on) staking - turn staking on or off"
             + "\nstaking=1"
             + "\n#to add extra nodes"
+<<<<<<< HEAD
             + "\naddnode=122.128.15.45"
             + "\naddnode=72.190.133.196"
             + "\naddnode=2605:9880:0:1da:6a05:caff:fe0a:cbe8"
@@ -976,6 +977,9 @@ void createConf()
             + "\naddnode=5.77.252.85"
             + "\naddnode=125.194.235.200"
             + "\naddnode=222.2.122.79";
+=======
+            + "\n#addnode=122.128.15.45";
+>>>>>>> 5a7bf67d41f7fa2718240eaa9d96b238126f726e
             
             
             
