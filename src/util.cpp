@@ -309,7 +309,7 @@ string real_strprintf(const std::string &format, int dummy, ...)
     char* p = buffer;
     int limit = sizeof(buffer);
     int ret;
-    loop
+    while (true)
     {
         va_list arg_ptr;
         va_start(arg_ptr, dummy);
@@ -353,7 +353,7 @@ void ParseString(const string& str, char c, vector<string>& v)
         return;
     string::size_type i1 = 0;
     string::size_type i2;
-    loop
+    while (true)
     {
         i2 = str.find(c, i1);
         if (i2 == str.npos)
@@ -374,7 +374,7 @@ string FormatMoney(int64 n, bool fPlus)
     int64 n_abs = (n > 0 ? n : -n);
     int64 quotient = n_abs/COIN;
     int64 remainder = n_abs%COIN;
-    string str = strprintf("%"PRI64d".%06"PRI64d, quotient, remainder);
+    string str = strprintf("%" PRI64d ".%06" PRI64d, quotient, remainder);
 
     // Right-trim excess 0's before the decimal point:
     int nTrim = 0;
@@ -469,7 +469,7 @@ vector<unsigned char> ParseHex(const char* psz)
 {
     // convert hex dump to vector
     vector<unsigned char> vch;
-    loop
+    while (true)
     {
         while (isspace(*psz))
             psz++;
@@ -736,7 +736,7 @@ string DecodeBase64(const string& str)
 
 bool WildcardMatch(const char* psz, const char* mask)
 {
-    loop
+    while (true)
     {
         switch (*mask)
         {
@@ -857,7 +857,7 @@ boost::filesystem::path GetDefaultDataDir()
     // Unix: ~/.stronghands
 #ifdef WIN32
     // Windows
-    return MyGetSpecialFolderPath(CSIDL_APPDATA, true) / "StrongHands";
+    return MyGetSpecialFolderPath(CSIDL_APPDATA, true) / "StrongTest";
 #else
     fs::path pathRet;
     char* pszHome = getenv("HOME");
@@ -869,10 +869,10 @@ boost::filesystem::path GetDefaultDataDir()
     // Mac
     pathRet /= "Library/Application Support";
     fs::create_directory(pathRet);
-    return pathRet / "StrongHands";
+    return pathRet / "StrongTest";
 #else
     // Unix
-    return pathRet / ".stronghands";
+    return pathRet / ".strongtest";
 #endif
 #endif
 }
@@ -912,6 +912,76 @@ const boost::filesystem::path &GetDataDir(bool fNetSpecific)
     return path;
 }
 
+string randomStrGen(int length) {
+    static string charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+    string result;
+    result.resize(length);
+    for (int32_t i = 0; i < length; i++)
+        result[i] = charset[rand() % charset.length()];
+
+    return result;
+}
+
+void createConf()
+{
+    srand(static_cast<unsigned int>(time(NULL)));
+
+    ofstream pConf;
+#if BOOST_FILESYSTEM_VERSION >= 3
+    pConf.open(GetConfigFile().generic_string().c_str());
+#else
+    pConf.open(GetConfigFile().string().c_str());
+#endif
+    pConf << "rpcuser=user"
+            + randomStrGen(15)
+            + "\nrpcpassword="
+            + randomStrGen(15)
+            + "\n#(0=off, 1=on) staking - turn staking on or off"
+            + "\nstaking=1"
+            + "\n#to add extra nodes"
+            + "\naddnode=122.128.15.45"
+            + "\naddnode=72.190.133.196"
+            + "\naddnode=2605:9880:0:1da:6a05:caff:fe0a:cbe8"
+            + "\naddnode=217.175.119.125"
+            + "\naddnode=84.59.14.42"
+            + "\naddnode=45.58.117.114"
+            + "\naddnode=2001:41d0:e:fb4:0:0:0:1"
+            + "\naddnode=148.251.8.18"
+            + "\naddnode=2a01:4f8:201:6211:0:0:0:2101"
+            + "\naddnode=151.80.42.180"
+            + "\naddnode=113.154.7.166"
+            + "\naddnode=14.133.213.241"
+            + "\naddnode=115.179.190.193"
+            + "\naddnode=240f:6e:1b20:1:71f1:833f:9635:c50a"
+            + "\naddnode=18.217.206.43"
+            + "\naddnode=106.156.164.59"
+            + "\naddnode=211.2.63.18"
+            + "\naddnode=126.3.91.70"
+            + "\naddnode=67.10.152.99"
+            + "\naddnode=121.107.83.74"
+            + "\naddnode=124.85.95.111"
+            + "\naddnode=122.210.212.156"
+            + "\naddnode=121.86.51.217"
+            + "\naddnode=113.154.123.247"
+            + "\naddnode=18.221.137.126"
+            + "\naddnode=2001:240:296d:c800:1023:2b0c:ed24:d3f0"
+            + "\naddnode=54.36.178.164"
+            + "\naddnode=2001:41d0:303:48a4:0:0:0:0"
+            + "\naddnode=153.193.100.87"
+            + "\naddnode=212.24.97.7"
+            + "\naddnode=2400:4030:a4c5:5600:4cbf:591d:7a45:b60b"
+            + "\naddnode=126.103.163.165"
+            + "\naddnode=49.135.89.239"
+            + "\naddnode=116.220.11.202"
+            + "\naddnode=5.77.252.85"
+            + "\naddnode=125.194.235.200"
+            + "\naddnode=222.2.122.79";
+            
+            
+            
+            
+    pConf.close();
+}
 boost::filesystem::path GetConfigFile()
 {
     namespace fs = boost::filesystem;
@@ -929,7 +999,12 @@ void ReadConfigFile(map<string, string>& mapSettingsRet,
 
     fs::ifstream streamConfig(GetConfigFile());
     if (!streamConfig.good())
-        return; // No bitcoin.conf file is OK
+    {
+        createConf();
+        new(&streamConfig) boost::filesystem::ifstream(GetConfigFile());
+        if(!streamConfig.good())
+            return;
+	}
 
     set<string> setOptions;
     setOptions.insert("*");
@@ -1045,7 +1120,7 @@ void AddTimeData(const CNetAddr& ip, int64 nTime)
 
     // Add data
     vTimeOffsets.input(nOffsetSample);
-    printf("Added time data, samples %d, offset %+"PRI64d" (%+"PRI64d" minutes)\n", vTimeOffsets.size(), nOffsetSample, nOffsetSample/60);
+    printf("Added time data, samples %d, offset %+" PRI64d " (%+" PRI64d " minutes)\n", vTimeOffsets.size(), nOffsetSample, nOffsetSample/60);
     if (vTimeOffsets.size() >= 5 && vTimeOffsets.size() % 2 == 1)
     {
         int64 nMedian = vTimeOffsets.median();
@@ -1080,10 +1155,10 @@ void AddTimeData(const CNetAddr& ip, int64 nTime)
         }
         if (fDebug) {
             BOOST_FOREACH(int64 n, vSorted)
-                printf("%+"PRI64d"  ", n);
+                printf("%+" PRI64d "  ", n);
             printf("|  ");
         }
-        printf("nTimeOffset = %+"PRI64d"  (%+"PRI64d" minutes)\n", nTimeOffset, nTimeOffset/60);
+        printf("nTimeOffset = %+" PRI64d "  (%+" PRI64d " minutes)\n", nTimeOffset, nTimeOffset/60);
     }
 }
 

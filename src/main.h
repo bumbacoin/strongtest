@@ -51,8 +51,8 @@ static const int fHaveUPnP = true;
 static const int fHaveUPnP = false;
 #endif
 
-static const uint256 hashGenesisBlockOfficial("0x00000b8ada156793cd495e09bff9c662226ed3ed3784635295c084f7242b46df");
-static const uint256 hashGenesisBlockTestNet("0x00000001f757bb737f6596503e17cd17b0658ce630cc727c0cca81aec47c9f06");
+static const uint256 hashGenesisBlockOfficial("0x000007cc7037e429ce10a57be2010addae40074f549da9a5bd5a6b944925a5fe");
+static const uint256 hashGenesisBlockTestNet("0x00000b8ada156793cd495e09bff9c662226ed3ed3784635295c084f7242b46df");
 
 static const int64 nMaxClockDrift = 0.5 * 60 * 60;        // two hours
 
@@ -1351,7 +1351,7 @@ public:
 
     std::string ToString() const
     {
-        return strprintf("CBlockIndex(nprev=%08x, pnext=%08x, nFile=%d, nBlockPos=%-6d nHeight=%d, nMint=%s, nMoneySupply=%s, nFlags=(%s)(%d)(%s), nStakeModifier=%016"PRI64x", nStakeModifierChecksum=%08x, hashProofOfStake=%s, prevoutStake=(%s), nStakeTime=%d merkle=%s, hashBlock=%s)",
+        return strprintf("CBlockIndex(nprev=%08x, pnext=%08x, nFile=%d, nBlockPos=%-6d nHeight=%d, nMint=%s, nMoneySupply=%s, nFlags=(%s)(%d)(%s), nStakeModifier=%016" PRI64x ", nStakeModifierChecksum=%08x, hashProofOfStake=%s, prevoutStake=(%s), nStakeTime=%d merkle=%s, hashBlock=%s)",
             pprev, pnext, nFile, nBlockPos, nHeight,
             FormatMoney(nMint).c_str(), FormatMoney(nMoneySupply).c_str(),
             GeneratedStakeModifier() ? "MOD" : "-", GetStakeEntropyBit(), IsProofOfStake()? "PoS" : "PoW",
@@ -1669,8 +1669,8 @@ public:
         return strprintf(
                 "CAlert(\n"
                 "    nVersion     = %d\n"
-                "    nRelayUntil  = %"PRI64d"\n"
-                "    nExpiration  = %"PRI64d"\n"
+                "    nRelayUntil  = %" PRI64d "\n"
+                "    nExpiration  = %" PRI64d "\n"
                 "    nID          = %d\n"
                 "    nCancel      = %d\n"
                 "    setCancel    = %s\n"

@@ -640,7 +640,7 @@ bool CTxMemPool::accept(CTxDB& txdb, CTransaction &tx, bool fCheckInputs,
         // Don't accept it if it can't get into a block
         int64 txMinFee = tx.GetMinFee(1000, false, GMF_RELAY, nSize);
         if (nFees < txMinFee)
-            return error("CTxMemPool::accept() : not enough fees %s, %"PRI64d" < %"PRI64d,
+            return error("CTxMemPool::accept() : not enough fees %s, %" PRI64d " < %"PRI64d,
                          hash.ToString().c_str(),
                          nFees, txMinFee);
 
@@ -949,7 +949,7 @@ int64 GetProofOfWorkReward(unsigned int nBits)
     {
         CBigNum bnMidValue = (bnLowerBound + bnUpperBound) / 2;
         if (fDebug && GetBoolArg("-printcreation"))
-            printf("GetProofOfWorkReward() : lower=%"PRI64d" upper=%"PRI64d" mid=%"PRI64d"\n", bnLowerBound.getuint64(), bnUpperBound.getuint64(), bnMidValue.getuint64());
+            printf("GetProofOfWorkReward() : lower=%" PRI64d " upper=%" PRI64d " mid=%" PRI64d "\n", bnLowerBound.getuint64(), bnUpperBound.getuint64(), bnMidValue.getuint64());
         if (bnMidValue * bnMidValue * bnMidValue * bnMidValue * bnTargetLimit > bnSubsidyLimit * bnSubsidyLimit * bnSubsidyLimit * bnSubsidyLimit * bnTarget)
             bnUpperBound = bnMidValue;
         else
@@ -959,7 +959,7 @@ int64 GetProofOfWorkReward(unsigned int nBits)
     int64 nSubsidy = bnUpperBound.getuint64();
     nSubsidy = (nSubsidy / CENT) * CENT;
     if (fDebug && GetBoolArg("-printcreation"))
-        printf("GetProofOfWorkReward() : create=%s nBits=0x%08x nSubsidy=%"PRI64d"\n", FormatMoney(nSubsidy).c_str(), nBits, nSubsidy);
+        printf("GetProofOfWorkReward() : create=%s nBits=0x%08x nSubsidy=%" PRI64d "\n", FormatMoney(nSubsidy).c_str(), nBits, nSubsidy);
 
     return min(nSubsidy, MAX_MINT_PROOF_OF_WORK);
 }
@@ -972,7 +972,7 @@ int64 GetProofOfStakeReward(int64 nCoinAge)
 
     strMotivational = "Wow, BRUH you just staked!";
     if (fDebug && GetBoolArg("-printcreation"))
-        printf("GetProofOfStakeReward(): create=%s nCoinAge=%"PRI64d"\n", FormatMoney(nSubsidy).c_str(), nCoinAge);
+        printf("GetProofOfStakeReward(): create=%s nCoinAge=%" PRI64d "\n", FormatMoney(nSubsidy).c_str(), nCoinAge);
     return nSubsidy;
 }
 
@@ -1540,7 +1540,7 @@ bool CBlock::ConnectBlock(CTxDB& txdb, CBlockIndex* pindex)
     // stronghands: fees are not collected by miners as in bitcoin
     // stronghands: fees are destroyed to compensate the entire network
     if (fDebug && GetBoolArg("-printcreation"))
-        printf("ConnectBlock() : destroy=%s nFees=%"PRI64d"\n", FormatMoney(nFees).c_str(), nFees);
+        printf("ConnectBlock() : destroy=%s nFees=%" PRI64d "\n", FormatMoney(nFees).c_str(), nFees);
 
     // Update block index on disk without changing it in memory.
     // The memory index structure will be changed after the db commits.
@@ -1840,7 +1840,7 @@ bool CBlock::GetCoinAge(uint64& nCoinAge) const
     if (nCoinAge == 0) // block coin age minimum 1 coin-day
         nCoinAge = 1;
     if (fDebug && GetBoolArg("-printcoinage"))
-        printf("block coin age total nCoinDays=%"PRI64d"\n", nCoinAge);
+        printf("block coin age total nCoinDays=%" PRI64d "\n", nCoinAge);
     return true;
 }
 
@@ -1888,7 +1888,7 @@ bool CBlock::AddToBlockIndex(unsigned int nFile, unsigned int nBlockPos)
     pindexNew->SetStakeModifier(nStakeModifier, fGeneratedStakeModifier);
     pindexNew->nStakeModifierChecksum = GetStakeModifierChecksum(pindexNew);
     if (!CheckStakeModifierCheckpoints(pindexNew->nHeight, pindexNew->nStakeModifierChecksum))
-        return error("AddToBlockIndex() : Rejected by stake modifier checkpoint height=%d, modifier=0x%016"PRI64x, pindexNew->nHeight, nStakeModifier);
+        return error("AddToBlockIndex() : Rejected by stake modifier checkpoint height=%d, modifier=0x%016" PRI64x, pindexNew->nHeight, nStakeModifier);
 
     // Add to mapBlockIndex
     map<uint256, CBlockIndex*>::iterator mi = mapBlockIndex.insert(make_pair(hash, pindexNew)).first;
@@ -2312,7 +2312,7 @@ static unsigned int nCurrentBlockFile = 1;
 FILE* AppendBlockFile(unsigned int& nFileRet)
 {
     nFileRet = 0;
-    loop
+    for (;;)
     {
         FILE* file = OpenBlockFile(nCurrentBlockFile, 0, "ab");
         if (!file)
@@ -2335,13 +2335,11 @@ bool LoadBlockIndex(bool fAllowNew)
     if (fTestNet)
     {
         hashGenesisBlock = hashGenesisBlockTestNet;
-        bnProofOfWorkLimit = CBigNum(~uint256(0) >> 28);
-        MAX_MINT_PROOF_OF_WORK = 999999999
-        nTargetSpacing = 30 // 30 second blocks
-        nStakeMinAge = 60 ; // test net min age is 1 minute
-        nCoinbaseMaturity = 1;
-        bnInitialHashTarget = CBigNum(~uint256(0) >> 29);
-        nModifierInterval = 60 * 2; // test net modifier interval is 2 minute
+        bnProofOfWorkLimit = CBigNum(~uint256(0) >> 20);
+        nStakeMinAge = 60 * 60; // test net min age is 1 hour
+        nCoinbaseMaturity = 6;
+        bnInitialHashTarget = CBigNum(~uint256(0) >> 20);
+        nModifierInterval = 60 * 20; // test net modifier interval is 20 minutes
     }
 
     printf("%s Network: genesis=0x%s nBitsLimit=0x%08x nBitsInitial=0x%08x nStakeMinAge=%d nCoinbaseMaturity=%d nModifierInterval=%d\n",
@@ -2373,7 +2371,7 @@ bool LoadBlockIndex(bool fAllowNew)
         // Genesis block
         const char* pszTimestamp = "Look at how a single candle can both defy and define the darkness";
         CTransaction txNew;
-        txNew.nTime = 1435547102;
+        txNew.nTime = 1516104051;
         txNew.vin.resize(1);
         txNew.vout.resize(1);
         txNew.vin[0].scriptSig = CScript() << 486604799 << CBigNum(9999) << vector<unsigned char>((const unsigned char*)pszTimestamp, (const unsigned char*)pszTimestamp + strlen(pszTimestamp));
@@ -2383,21 +2381,42 @@ bool LoadBlockIndex(bool fAllowNew)
         block.hashPrevBlock = 0;
         block.hashMerkleRoot = block.BuildMerkleTree();
         block.nVersion = 1;
-        block.nTime    = 1435547102;
+        block.nTime    = 1516104051;
         block.nBits    = bnProofOfWorkLimit.GetCompact();
-        block.nNonce   = 1560399;
+        block.nNonce   = 1861540;
 
         if (fTestNet)
         {
-            block.nTime    = 1345090000;
-            block.nNonce   = 122894938;
+            block.nTime    = 1516104051;
+            block.nNonce   = 1861540;
         }
 
+       if (true && (block.GetHash() != hashGenesisBlock)) {
+                block.nNonce = 0;
+
+                // This will figure out a valid hash and Nonce if you're
+                // creating a different genesis block:
+                uint256 hashTarget = CBigNum().SetCompact(block.nBits).getuint256();
+                while (block.GetHash() > hashTarget)
+                {
+                    ++block.nNonce;
+                    if (block.nNonce == 0)
+                    {
+                        printf("NONCE WRAPPED, incrementing time");
+                        ++block.nTime;
+                    }
+                    // if (block.nNonce % 10000 == 0)
+                    // {
+                    //     printf("nonce %08u: hash = %s \n", block.nNonce, block.GetHash().ToString().c_str());
+                    // }
+                }
+            }
         //// debug print
-        printf("%s\n", block.GetHash().ToString().c_str());
-        printf("%s\n", hashGenesisBlock.ToString().c_str());
-        printf("%s\n", block.hashMerkleRoot.ToString().c_str());
-        assert(block.hashMerkleRoot == uint256("0xff8892d29487de48caf88c622e688078a6d1268245de17248c0b1377737da38c"));
+        printf("block.GetHash() == %s\n", block.GetHash().ToString().c_str());
+        printf("block.hashMerkleRoot == %s\n", block.hashMerkleRoot.ToString().c_str());
+        printf("block.nTime = %u \n", block.nTime);
+        printf("block.nNonce = %u \n", block.nNonce);
+        assert(block.hashMerkleRoot == uint256("0xbba6d885e55941a1e8cb1514500ad910b36c3d9d2ab4e6c786518a8fce40e6f3"));
         block.print();
         assert(block.GetHash() == hashGenesisBlock);
         assert(block.CheckBlock());
@@ -2577,12 +2596,13 @@ string GetWarnings(string strFor)
     }
 
     // stronghands: wallet lock warning for minting
-        if (strMotivational != "")
-        {
-            nPriority = 101;
-            strStatusBar = strMotivational;
-        }
-
+/*	not working with qt5
+    if (strMotivational != "")
+    {
+        nPriority = 101;
+        strStatusBar = strMotivational;
+    }
+*/
     // Misc warnings like out of disk space and clock is wrong
     if (strMiscWarning != "")
     {
@@ -3370,11 +3390,11 @@ bool ProcessMessages(CNode* pfrom)
     {
         string strMessageStart((const char *)pchMessageStart, sizeof(pchMessageStart));
         vector<unsigned char> vchMessageStart(strMessageStart.begin(), strMessageStart.end());
-        printf("ProcessMessages : AdjustedTime=%"PRI64d" MessageStart=%s\n", GetAdjustedTime(), HexStr(vchMessageStart).c_str());
+        printf("ProcessMessages : AdjustedTime=%" PRI64d " MessageStart=%s\n", GetAdjustedTime(), HexStr(vchMessageStart).c_str());
         nTimeLastPrintMessageStart = GetAdjustedTime();
     }
 
-    loop
+    for (;;)
     {
         // Scan for message start
         CDataStream::iterator pstart = search(vRecv.begin(), vRecv.end(), BEGIN(pchMessageStart), END(pchMessageStart));
@@ -3839,7 +3859,7 @@ CBlock* CreateNewBlock(CReserveKey& reservekey, CWallet* pwallet, bool fProofOfS
                 dPriority += (double)nValueIn * nConf;
 
                 if (fDebug && GetBoolArg("-printpriority"))
-                    printf("priority     nValueIn=%-12"PRI64d" nConf=%-5d dPriority=%-20.1f\n", nValueIn, nConf, dPriority);
+                    printf("priority     nValueIn=%-12" PRI64d " nConf=%-5d dPriority=%-20.1f\n", nValueIn, nConf, dPriority);
             }
 
             // Priority is sum(valuein * age) / txsize
@@ -4155,7 +4175,7 @@ void BitcoinMiner(CWallet *pwallet, bool fProofOfStake)
         uint256 hashTarget = CBigNum().SetCompact(pblock->nBits).getuint256();
         uint256 hashbuf[2];
         uint256& hash = *alignup<16>(hashbuf);
-        loop
+        for (;;)
         {
             unsigned int nHashesDone = 0;
             unsigned int nNonceFound;
