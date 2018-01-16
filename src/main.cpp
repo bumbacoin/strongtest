@@ -935,33 +935,21 @@ uint256 WantedByOrphan(const CBlock* pblockOrphan)
 int64 GetProofOfWorkReward(unsigned int nBits)
 {
     CBigNum bnSubsidyLimit = MAX_MINT_PROOF_OF_WORK;
-    CBigNum bnTarget;
-    bnTarget.SetCompact(nBits);
-    CBigNum bnTargetLimit = bnProofOfWorkLimit;
-    bnTargetLimit.SetCompact(bnTargetLimit.GetCompact());
 
-    // stronghands: subsidy is cut in half every 16x multiply of difficulty
-    // A reasonably continuous curve is used to avoid shock to market
-    // (nSubsidyLimit / nSubsidy) ** 4 == bnProofOfWorkLimit / bnTarget
-    CBigNum bnLowerBound = CENT;
-    CBigNum bnUpperBound = bnSubsidyLimit;
-    while (bnLowerBound + CENT <= bnUpperBound)
-    {
-        CBigNum bnMidValue = (bnLowerBound + bnUpperBound) / 2;
-        if (fDebug && GetBoolArg("-printcreation"))
-            printf("GetProofOfWorkReward() : lower=%" PRI64d " upper=%" PRI64d " mid=%" PRI64d "\n", bnLowerBound.getuint64(), bnUpperBound.getuint64(), bnMidValue.getuint64());
-        if (bnMidValue * bnMidValue * bnMidValue * bnMidValue * bnTargetLimit > bnSubsidyLimit * bnSubsidyLimit * bnSubsidyLimit * bnSubsidyLimit * bnTarget)
-            bnUpperBound = bnMidValue;
-        else
-            bnLowerBound = bnMidValue;
-    }
+    if(nHeight <= 1000)
+        //  First 1K blocks 1billion
+        nSubsidy = 1000000000 * COIN;
+    else
+        // Subsidy is cut in half every 1226400 blocks, which will occur approximately every 7 years
+        nSubsidy = 1000000 * COIN;
+        
 
-    int64 nSubsidy = bnUpperBound.getuint64();
     nSubsidy = (nSubsidy / CENT) * CENT;
+    
     if (fDebug && GetBoolArg("-printcreation"))
         printf("GetProofOfWorkReward() : create=%s nBits=0x%08x nSubsidy=%" PRI64d "\n", FormatMoney(nSubsidy).c_str(), nBits, nSubsidy);
 
-    return min(nSubsidy, MAX_MINT_PROOF_OF_WORK);
+    return nSubsidy;
 }
 
 // stronghands: miner's coin stake is rewarded based on coin age spent (coin-days)
