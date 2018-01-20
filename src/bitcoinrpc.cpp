@@ -817,6 +817,10 @@ Value sendtoaddress(const Array& params, bool fHelp)
     int64 nAmount = AmountFromValue(params[1]);
     if (nAmount < MIN_TXOUT_AMOUNT)
         throw JSONRPCError(-101, "Send amount too small");
+    if (nAmount > MAX_MONEY)
+        throw JSONRPCError(-101, "Send amount exceeds MAX_MONEY");
+    if ((nAmount + nTransactionFee) > MAX_MONEY)
+        throw JSONRPCError(-101, "Send amount plus fee exceeds MAX_MONEY");
 
     // Wallet comments
     CWalletTx wtx;
