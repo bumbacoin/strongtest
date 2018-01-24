@@ -934,7 +934,21 @@ uint256 WantedByOrphan(const CBlock* pblockOrphan)
 
 int64 GetProofOfWorkReward(unsigned int nBits)
 {
-    CBigNum bnSubsidyLimit = MAX_MINT_PROOF_OF_WORK;
+    int64 nMaxMintProofOfWork = 0;
+    
+    if (nBestHeight <= 900000)
+    {
+    nMaxMintProofOfWork = MAX_MINT_PROOF_OF_WORK;
+    }
+    
+    else if (nBestHeight > 900000)
+    {
+    nMaxMintProofOfWork = MAX_MINT_PROOF_OF_WORK_2;
+    }
+    
+    CBigNum bnSubsidyLimit = nMaxMintProofOfWork;
+
+        
     CBigNum bnTarget;
     bnTarget.SetCompact(nBits);
     CBigNum bnTargetLimit = bnProofOfWorkLimit;
@@ -961,19 +975,42 @@ int64 GetProofOfWorkReward(unsigned int nBits)
     if (fDebug && GetBoolArg("-printcreation"))
         printf("GetProofOfWorkReward() : create=%s nBits=0x%08x nSubsidy=%"PRI64d"\n", FormatMoney(nSubsidy).c_str(), nBits, nSubsidy);
 
-    return MAX_MINT_PROOF_OF_WORK;
+return nMaxMintProofOfWork;
+//    return min(nSubsidy, nMaxMintProofOfWork);
 }
 
 // stronghands: miner's coin stake is rewarded based on coin age spent (coin-days)
 int64 GetProofOfStakeReward(int64 nCoinAge)
 {
+    int64 nSubsidy = 0 ;
     static int64 nRewardCoinYear = 1200 * CENT;  // creation amount per coin-year
-    int64 nSubsidy = nCoinAge * 33 / (365 * 33 + 8) * nRewardCoinYear;
 
-    strMotivational = "Wow, BRUH you just staked!";
+	if (nBestHeight <= 900000)   // to be changed, 3 months more of 1200%
+	{
+	    int64 nSubsidy = nCoinAge * 33 / (365 * 33 + 8) * nRewardCoinYear;
+	}
+		
+    else if (nBestHeight > 900300)   // to be changed, static rewards for ever
+	{
+	    int64 nSubsidy = 50000 * COIN;
+	}
+	
+    int64 nMaxMintProofOfStake = 0;
+    
+    if (nBestHeight <= 900000)   // before fork max stake value limited by MAX_MONEY
+    {
+    nMaxMintProofOfStake = nSubsidy;
+    }
+    
+    else if (nBestHeight > 900000)   // after fork max stake value limit 1 billion
+    {
+    nMaxMintProofOfStake = 1000000000 * COIN;
+    }
+	
+	    strMotivational = "Wow, BRUH you just staked!";
     if (fDebug && GetBoolArg("-printcreation"))
         printf("GetProofOfStakeReward(): create=%s nCoinAge=%" PRI64d "\n", FormatMoney(nSubsidy).c_str(), nCoinAge);
-    return nSubsidy;
+    return min(nSubsidy, nMaxMintProofOfStake);
 }
 
 static const int64 nTargetTimespan = 1 * 24 * 60 * 60;  // one week
@@ -2776,7 +2813,7 @@ bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv)
         CAddress addrFrom;
         uint64 nNonce = 1;
         vRecv >> pfrom->nVersion >> pfrom->nServices >> nTime >> addrMe;
-        if (pfrom->nVersion < MIN_PROTO_VERSION)
+        if (pfrom->nVersion < (GetAdjustedTime() > FORK_TIME ? MIN_PROTO_VERSION_FORK : MIN_PROTO_VERSION))
         {
             // Since February 20, 2012, the protocol is initiated at version 209,
             // and earlier versions are no longer supported
@@ -2853,7 +2890,7 @@ bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv)
         static int nAskedForBlocks = 0;
         if (!pfrom->fClient && !pfrom->fOneShot &&
             (pfrom->nVersion < NOBLKS_VERSION_START ||
-             pfrom->nVersion >= NOBLKS_VERSION_END) &&
+             pfrom->nVersion > (GetAdjustedTime() > FORK_TIME ? NOBLKS_VERSION_END_FORK : NOBLKS_VERSION_END)) &&
              (nAskedForBlocks < 1 || vNodes.size() <= 1))
         {
             nAskedForBlocks++;
