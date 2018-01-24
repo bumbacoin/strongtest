@@ -936,12 +936,12 @@ int64 GetProofOfWorkReward(unsigned int nBits)
 {
     int64 nMaxMintProofOfWork = 0;
     
-    if (nBestHeight <= 900000)
+    if (nBestHeight <= 8400)
     {
     nMaxMintProofOfWork = MAX_MINT_PROOF_OF_WORK;
     }
     
-    else if (nBestHeight > 900000)
+    else if (nBestHeight > 8400)
     {
     nMaxMintProofOfWork = MAX_MINT_PROOF_OF_WORK_2;
     }
@@ -985,26 +985,26 @@ int64 GetProofOfStakeReward(int64 nCoinAge)
     int64 nSubsidy = 0 ;
     static int64 nRewardCoinYear = 1200 * CENT;  // creation amount per coin-year
 
-	if (nBestHeight <= 900000)   // to be changed, 3 months more of 1200%
+	if (nBestHeight <= 8400)   // to be changed, 3 months more of 1200%
 	{
 	    int64 nSubsidy = nCoinAge * 33 / (365 * 33 + 8) * nRewardCoinYear;
 	}
 		
-    else if (nBestHeight > 900300)   // to be changed, static rewards for ever
+    else if (nBestHeight > 8400)   // to be changed, static rewards for ever
 	{
 	    int64 nSubsidy = 50000 * COIN;
 	}
 	
     int64 nMaxMintProofOfStake = 0;
     
-    if (nBestHeight <= 900000)   // before fork max stake value limited by MAX_MONEY
+    if (nBestHeight <= 8400)   // before fork max stake value limited by MAX_MONEY
     {
     nMaxMintProofOfStake = nSubsidy;
     }
     
-    else if (nBestHeight > 900000)   // after fork max stake value limit 1 billion
+    else if (nBestHeight > 8400)   // after fork max stake value limit 1 billion
     {
-    nMaxMintProofOfStake = 1000000000 * COIN;
+    nMaxMintProofOfStake = 10 * COIN;
     }
 	
 	    strMotivational = "Wow, BRUH you just staked!";
