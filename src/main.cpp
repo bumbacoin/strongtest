@@ -982,35 +982,32 @@ return nMaxMintProofOfWork;
 // stronghands: miner's coin stake is rewarded based on coin age spent (coin-days)
 int64 GetProofOfStakeReward(int64 nCoinAge)
 {
-    int64 nSubsidy = 0 ;
+	
     static int64 nRewardCoinYear = 1200 * CENT;  // creation amount per coin-year
+    int64 nMaxMintProofOfStake = 10;
+	int64 nSubsidy = nCoinAge * 33 / (365 * 33 + 8) * nRewardCoinYear;
 
 	if (nBestHeight <= 8400)   // to be changed, 3 months more of 1200%
 	{
-	    int64 nSubsidy = nCoinAge * 33 / (365 * 33 + 8) * nRewardCoinYear;
+	    nSubsidy = nCoinAge * 33 / (365 * 33 + 8) * nRewardCoinYear;
 	}
 		
     else if (nBestHeight > 8400)   // to be changed, static rewards for ever
 	{
-	    int64 nSubsidy = 50000 * COIN;
+        nSubsidy = min(nMaxMintProofOfStake, nCoinAge * 33 / (365 * 33 + 8) * nRewardCoinYear * COIN);
 	}
 	
     int64 nMaxMintProofOfStake = 0;
     
-    if (nBestHeight <= 8400)   // before fork max stake value limited by MAX_MONEY
-    {
-    nMaxMintProofOfStake = nSubsidy;
-    }
     
-    else if (nBestHeight > 8400)   // after fork max stake value limit 1 billion
-    {
-    nMaxMintProofOfStake = 10 * COIN;
-    }
-	
-	    strMotivational = "Wow, BRUH you just staked!";
+/*    static int64 nRewardCoinYear = 1200 * CENT;  // creation amount per coin-year
+    int64 nSubsidy = nCoinAge * 33 / (365 * 33 + 8) * nRewardCoinYear;
+
+    strMotivational = "Wow, BRUH you just staked!";
     if (fDebug && GetBoolArg("-printcreation"))
         printf("GetProofOfStakeReward(): create=%s nCoinAge=%" PRI64d "\n", FormatMoney(nSubsidy).c_str(), nCoinAge);
-    return min(nSubsidy, nMaxMintProofOfStake);
+	return nSubsidy;
+    */
 }
 
 static const int64 nTargetTimespan = 1 * 24 * 60 * 60;  // one week
