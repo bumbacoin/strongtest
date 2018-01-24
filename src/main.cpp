@@ -996,9 +996,7 @@ int64 GetProofOfStakeReward(int64 nCoinAge)
 	{
         nSubsidy = min(nMaxMintProofOfStake, nCoinAge * 33 / (365 * 33 + 8) * nRewardCoinYear * COIN);
 	}
-	
-    int64 nMaxMintProofOfStake = 0;
-    
+	    
     
 /*    static int64 nRewardCoinYear = 1200 * CENT;  // creation amount per coin-year
     int64 nSubsidy = nCoinAge * 33 / (365 * 33 + 8) * nRewardCoinYear;
