@@ -28,7 +28,7 @@ class CInv;
 class CRequestTracker;
 class CNode;
 
-static const unsigned int FORK_TIME = 1516828764; // Wednesday, January 24, 2018 9:19:24 PM GMT // to be changed with actual date
+static const unsigned int FORK_TIME = 1516902942; // Wednesday, January 24, 2018 9:19:24 PM GMT // to be changed with actual date
 // static const int FORK_HEIGHT = 5674;
 static const unsigned int MAX_BLOCK_SIZE = 1000000;
 static const unsigned int MAX_BLOCK_SIZE_GEN = MAX_BLOCK_SIZE/2;
