@@ -936,12 +936,12 @@ int64 GetProofOfWorkReward(unsigned int nBits)
 {
     int64 nMaxMintProofOfWork = 0;
     
-    if (nBestHeight <= 8400)
+    if (nBestHeight <= 10400)
     {
     nMaxMintProofOfWork = MAX_MINT_PROOF_OF_WORK;
     }
     
-    else if (nBestHeight > 8400)
+    else if (nBestHeight > 10400)
     {
     nMaxMintProofOfWork = MAX_MINT_PROOF_OF_WORK_2;
     }
@@ -987,12 +987,12 @@ int64 GetProofOfStakeReward(int64 nCoinAge)
     int64 nMaxMintProofOfStake = 10;
 	int64 nSubsidy = nCoinAge * 33 / (365 * 33 + 8) * nRewardCoinYear;
 
-	if (nBestHeight <= 8400)   // to be changed, 3 months more of 1200%
+	if (nBestHeight <= 10400)   // to be changed, 3 months more of 1200%
 	{
 	    nSubsidy = nCoinAge * 33 / (365 * 33 + 8) * nRewardCoinYear;
 	}
 		
-    else if (nBestHeight > 8400)   // to be changed, static rewards for ever
+    else if (nBestHeight > 10400)   // to be changed, static rewards for ever
 	{
         nSubsidy = min(nMaxMintProofOfStake, nCoinAge * 33 / (365 * 33 + 8) * nRewardCoinYear * COIN);
 	}
