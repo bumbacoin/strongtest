@@ -986,19 +986,19 @@ int64 GetProofOfStakeReward(int64 nCoinAge)
     static int64 nRewardCoinYear = 1200 * CENT;  // creation amount per coin-year
     int64 nMaxMintProofOfStake = 10;
 
-        if (nBestHeight >= 10850)   // to be changed, 3 months more of 1200%
+        if (nBestHeight >= 10200)   // to be changed, 3 months more of 1200%
         {
             nMaxMintProofOfStake = nMaxMintProofOfStake * COIN;
         }
 
     int64 nSubsidy = nCoinAge * 33 / (365 * 33 + 8) * nRewardCoinYear;
 
-	if (nBestHeight <= 10400)   // to be changed, 3 months more of 1200%
+	if (nBestHeight <= 10100)   // to be changed, 3 months more of 1200%
 	{
 	    nSubsidy = nCoinAge * 33 / (365 * 33 + 8) * nRewardCoinYear;
 	}
 
-    else if (nBestHeight > 10400)   // to be changed, static rewards for ever
+    else if (nBestHeight > 10100)   // to be changed, static rewards for ever
 	{
         nSubsidy = min(nMaxMintProofOfStake, nCoinAge * 33 / (365 * 33 + 8) * nRewardCoinYear * COIN);
 	}
