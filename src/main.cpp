@@ -936,12 +936,12 @@ int64 GetProofOfWorkReward(unsigned int nBits)
 {
     int64 nMaxMintProofOfWork = 0;
     
-    if (nBestHeight <= 7500)
+    if (nBestHeight <= 6000)
     {
     nMaxMintProofOfWork = MAX_MINT_PROOF_OF_WORK;
     }
     
-    else if (nBestHeight > 7500)
+    else if (nBestHeight > 6000)
     {
     nMaxMintProofOfWork = MAX_MINT_PROOF_OF_WORK_2;
     }
@@ -998,7 +998,7 @@ int64 GetProofOfStakeReward(int64 nCoinAge)
 	    nSubsidy = nCoinAge * 33 / (365 * 33 + 8) * nRewardCoinYear;
 	}
 */
-    if (nBestHeight > 7500)   // to be changed, static rewards for ever
+    if (nBestHeight > 5800)   // to be changed, static rewards for ever
 	{
         nSubsidy = max(nMaxMintProofOfStake, nCoinAge * 33 / (365 * 33 + 8) * nRewardCoinYear * COIN);
 	}
@@ -1066,7 +1066,7 @@ unsigned int static GetNextTargetRequired(const CBlockIndex* pindexLast, bool fP
     CBigNum bnNew;
     bnNew.SetCompact(pindexPrev->nBits);
     int64 nTargetSpacing = fProofOfStake? STAKE_TARGET_SPACING : min(nTargetSpacingWorkMax, (int64) STAKE_TARGET_SPACING * (1 + pindexLast->nHeight - pindexPrev->nHeight));
-    if (nBestHeight > 7500 )
+    if (nBestHeight > 5675 )
     	nTargetSpacing = nTargetSpacing / 3;
     int64 nInterval = nTargetTimespan / nTargetSpacing;
     bnNew *= ((nInterval - 1) * nTargetSpacing + nActualSpacing + nActualSpacing);
