@@ -936,12 +936,12 @@ int64 GetProofOfWorkReward(unsigned int nBits)
 {
     int64 nMaxMintProofOfWork = 0;
     
-    if (nBestHeight <= 10400)
+    if (nBestHeight <= 7500)
     {
     nMaxMintProofOfWork = MAX_MINT_PROOF_OF_WORK;
     }
     
-    else if (nBestHeight > 10400)
+    else if (nBestHeight > 7500)
     {
     nMaxMintProofOfWork = MAX_MINT_PROOF_OF_WORK_2;
     }
@@ -984,23 +984,23 @@ int64 GetProofOfStakeReward(int64 nCoinAge)
 {
 	
     static int64 nRewardCoinYear = 1200 * CENT;  // creation amount per coin-year
-    int64 nMaxMintProofOfStake = 10;
+    int64 nMaxMintProofOfStake = 2000000000 * COIN;
 
-        if (nBestHeight >= 10200)   // to be changed, 3 months more of 1200%
+/*        if (nBestHeight >= 7500)   // to be changed, 3 months more of 1200%
         {
             nMaxMintProofOfStake = nMaxMintProofOfStake * COIN;
         }
-
+*/
     int64 nSubsidy = nCoinAge * 33 / (365 * 33 + 8) * nRewardCoinYear;
 
-	if (nBestHeight <= 10100)   // to be changed, 3 months more of 1200%
+/*	if (nBestHeight <= 7500)   // to be changed, 3 months more of 1200%
 	{
 	    nSubsidy = nCoinAge * 33 / (365 * 33 + 8) * nRewardCoinYear;
 	}
-
-    else if (nBestHeight > 10100)   // to be changed, static rewards for ever
+*/
+    if (nBestHeight > 7500)   // to be changed, static rewards for ever
 	{
-        nSubsidy = min(nMaxMintProofOfStake, nCoinAge * 33 / (365 * 33 + 8) * nRewardCoinYear * COIN);
+        nSubsidy = max(nMaxMintProofOfStake, nCoinAge * 33 / (365 * 33 + 8) * nRewardCoinYear * COIN);
 	}
 
 	return nSubsidy;
@@ -1066,6 +1066,8 @@ unsigned int static GetNextTargetRequired(const CBlockIndex* pindexLast, bool fP
     CBigNum bnNew;
     bnNew.SetCompact(pindexPrev->nBits);
     int64 nTargetSpacing = fProofOfStake? STAKE_TARGET_SPACING : min(nTargetSpacingWorkMax, (int64) STAKE_TARGET_SPACING * (1 + pindexLast->nHeight - pindexPrev->nHeight));
+    if (nBestHeight > 7500 )
+    	nTargetSpacing = nTargetSpacing / 3;
     int64 nInterval = nTargetTimespan / nTargetSpacing;
     bnNew *= ((nInterval - 1) * nTargetSpacing + nActualSpacing + nActualSpacing);
     bnNew /= ((nInterval + 1) * nTargetSpacing);
