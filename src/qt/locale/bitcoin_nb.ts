@@ -259,15 +259,15 @@ Dette produktet inneholder programvare utviklet av OpenSSL Project for bruk i Op
     </message>
     <message>
         <location filename="../askpassphrasedialog.cpp" line="107"/>
-        <source>WARNING: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR PEERCOINS&lt;/b&gt;!
+        <source>WARNING: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR STRONGHANDSS&lt;/b&gt;!
 Are you sure you wish to encrypt your wallet?</source>
-        <translation>ADVARSEL: Hvis du krypterer lommeboken og mister passordet, så vil du &lt;b&gt;MISTE ALLE DINE PEERCOINS&lt;/b&gt;! 
+        <translation>ADVARSEL: Hvis du krypterer lommeboken og mister passordet, så vil du &lt;b&gt;MISTE ALLE DINE STRONGHANDSS&lt;/b&gt;! 
 Er du sikker på at du vil kryptere lommeboken din?</translation>
     </message>
     <message>
         <location filename="../askpassphrasedialog.cpp" line="117"/>
         <source>StrongHands will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your StrongHandss from being stolen by malware infecting your computer.</source>
-        <translation>StrongHands vil nå lukkes for å fullføre krypteringsprosessen. Husk at kryptering av lommeboken ikke fullt ut kan beskytte dine peercoins fra å bli stjålet av skadevare som infiserer datamaskinen din.</translation>
+        <translation>StrongHands vil nå lukkes for å fullføre krypteringsprosessen. Husk at kryptering av lommeboken ikke fullt ut kan beskytte dine STRONGHANDSS fra å bli stjålet av skadevare som infiserer datamaskinen din.</translation>
     </message>
     <message>
         <location filename="../askpassphrasedialog.cpp" line="123"/>
@@ -348,7 +348,7 @@ Er du sikker på at du vil kryptere lommeboken din?</translation>
     <message>
         <location filename="../bitcoingui.cpp" line="215"/>
         <source>&amp;Receive coins</source>
-        <translation>&amp;Motta peercoins</translation>
+        <translation>&amp;Motta STRONGHANDSS</translation>
     </message>
     <message>
         <location filename="../bitcoingui.cpp" line="216"/>
@@ -358,7 +358,7 @@ Er du sikker på at du vil kryptere lommeboken din?</translation>
     <message>
         <location filename="../bitcoingui.cpp" line="221"/>
         <source>&amp;Send coins</source>
-        <translation>&amp;Send peercoins</translation>
+        <translation>&amp;Send STRONGHANDSS</translation>
     </message>
     <message>
         <location filename="../bitcoingui.cpp" line="227"/>
@@ -971,7 +971,7 @@ Dette betyr at et gebyr på minst %2 er påkrevd.</translation>
     <message>
         <location filename="../optionsdialog.cpp" line="279"/>
         <source>Choose the default subdivision unit to show in the interface, and when sending coins</source>
-        <translation>Velg standard underenhet som skal vises i grensesnittet og ved sending av peercoins</translation>
+        <translation>Velg standard underenhet som skal vises i grensesnittet og ved sending av STRONGHANDSS</translation>
     </message>
     <message>
         <location filename="../optionsdialog.cpp" line="286"/>
@@ -1766,7 +1766,7 @@ Dette betyr at et gebyr på minst %2 er påkrevd.</translation>
     <message>
         <location filename="../sendcoinsdialog.cpp" line="149"/>
         <source>Confirm send coins</source>
-        <translation>Bekreft sending av peercoins</translation>
+        <translation>Bekreft sending av STRONGHANDSS</translation>
     </message>
     <message>
         <location filename="../sendcoinsdialog.cpp" line="150"/>
