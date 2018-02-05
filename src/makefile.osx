@@ -7,8 +7,7 @@
 # Mac OS X makefile for stronghands
 # Originally by Laszlo Hanyecz (solar@heliacal.net)
 
-CXX=g++
-CC=gcc
+CXX=llvm-g++
 DEPSDIR=/opt/local
 
 INCLUDEPATHS= \

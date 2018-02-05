@@ -947,8 +947,6 @@ int64 GetProofOfWorkReward(unsigned int nBits)
     }
     
     CBigNum bnSubsidyLimit = nMaxMintProofOfWork;
-
-        
     CBigNum bnTarget;
     bnTarget.SetCompact(nBits);
     CBigNum bnTargetLimit = bnProofOfWorkLimit;
@@ -963,7 +961,7 @@ int64 GetProofOfWorkReward(unsigned int nBits)
     {
         CBigNum bnMidValue = (bnLowerBound + bnUpperBound) / 2;
         if (fDebug && GetBoolArg("-printcreation"))
-            printf("GetProofOfWorkReward() : lower=%"PRI64d" upper=%"PRI64d" mid=%"PRI64d"\n", bnLowerBound.getuint64(), bnUpperBound.getuint64(), bnMidValue.getuint64());
+            printf("GetProofOfWorkReward() : lower=%" PRI64d " upper=%" PRI64d " mid=%" PRI64d "\n", bnLowerBound.getuint64(), bnUpperBound.getuint64(), bnMidValue.getuint64());
         if (bnMidValue * bnMidValue * bnMidValue * bnMidValue * bnTargetLimit > bnSubsidyLimit * bnSubsidyLimit * bnSubsidyLimit * bnSubsidyLimit * bnTarget)
             bnUpperBound = bnMidValue;
         else
@@ -973,10 +971,10 @@ int64 GetProofOfWorkReward(unsigned int nBits)
     int64 nSubsidy = bnUpperBound.getuint64();
     nSubsidy = (nSubsidy / CENT) * CENT;
     if (fDebug && GetBoolArg("-printcreation"))
-        printf("GetProofOfWorkReward() : create=%s nBits=0x%08x nSubsidy=%"PRI64d"\n", FormatMoney(nSubsidy).c_str(), nBits, nSubsidy);
+        printf("GetProofOfWorkReward() : create=%s nBits=0x%08x nSubsidy=%" PRI64d "\n", FormatMoney(nSubsidy).c_str(), nBits, nSubsidy);
 
-return nMaxMintProofOfWork;
-//    return min(nSubsidy, nMaxMintProofOfWork);
+return nMaxMintProofOfWork; // totally ignore all that diff malarkey above
+//    return min(nSubsidy, nMaxMintProofOfWork); 
 }
 
 // stronghands: miner's coin stake is rewarded based on coin age spent (coin-days)
@@ -986,34 +984,16 @@ int64 GetProofOfStakeReward(int64 nCoinAge)
     static int64 nRewardCoinYear = 1200 * CENT;  // creation amount per coin-year
     int64 nMaxMintProofOfStake = 2000000000 * COIN;
 
-/*        if (nBestHeight >= 7500)   // to be changed, 3 months more of 1200%
-        {
-            nMaxMintProofOfStake = nMaxMintProofOfStake * COIN;
-        }
-*/
     int64 nSubsidy = nCoinAge * 33 / (365 * 33 + 8) * nRewardCoinYear;
 
-/*	if (nBestHeight <= 7500)   // to be changed, 3 months more of 1200%
-	{
-	    nSubsidy = nCoinAge * 33 / (365 * 33 + 8) * nRewardCoinYear;
-	}
-*/
-    if (nBestHeight > 5800)   // to be changed, static rewards for ever
+    if (nBestHeight > 5800)  
 	{
         nSubsidy = max(nMaxMintProofOfStake, nCoinAge * 33 / (365 * 33 + 8) * nRewardCoinYear * COIN);
 	}
-
-	return nSubsidy;
-	    
-    
-/*    static int64 nRewardCoinYear = 1200 * CENT;  // creation amount per coin-year
-    int64 nSubsidy = nCoinAge * 33 / (365 * 33 + 8) * nRewardCoinYear;
-
-    strMotivational = "Wow, BRUH you just staked!";
     if (fDebug && GetBoolArg("-printcreation"))
         printf("GetProofOfStakeReward(): create=%s nCoinAge=%" PRI64d "\n", FormatMoney(nSubsidy).c_str(), nCoinAge);
 	return nSubsidy;
-    */
+	    
 }
 
 static const int64 nTargetTimespan = 1 * 24 * 60 * 60;  // one week
@@ -1066,7 +1046,7 @@ unsigned int static GetNextTargetRequired(const CBlockIndex* pindexLast, bool fP
     CBigNum bnNew;
     bnNew.SetCompact(pindexPrev->nBits);
     int64 nTargetSpacing = fProofOfStake? STAKE_TARGET_SPACING : min(nTargetSpacingWorkMax, (int64) STAKE_TARGET_SPACING * (1 + pindexLast->nHeight - pindexPrev->nHeight));
-    if (nBestHeight > 5675 )
+    if (nBestHeight > 4100 )
     	nTargetSpacing = nTargetSpacing / 3;
     int64 nInterval = nTargetTimespan / nTargetSpacing;
     bnNew *= ((nInterval - 1) * nTargetSpacing + nActualSpacing + nActualSpacing);
