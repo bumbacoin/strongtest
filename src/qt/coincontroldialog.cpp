@@ -415,6 +415,7 @@ QString CoinControlDialog::getPriorityLabel(double dPriority)
     else ui->labelLocked->setVisible(false);
 }*/
 
+// maybe useful place for comparing selected coins against MAX_MONEY
 void CoinControlDialog::updateLabels(WalletModel *model, QDialog* dialog)
 {
     if (!model) return;
