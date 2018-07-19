@@ -471,7 +471,7 @@ bool CTransaction::CheckTransaction() const
         // stronghands: enforce minimum output amount
         if ((!txout.IsEmpty()) && txout.nValue < MIN_TXOUT_AMOUNT)
             return DoS(100, error("CTransaction::CheckTransaction() : txout.nValue below minimum"));
-        if (txout.nValue > ((int)nBestHeight > FORK_HEIGHT ? MAX_MONEY_2 : MAX_MONEY))
+        if (txout.nValue > MAX_MONEY)
             return DoS(100, error("CTransaction::CheckTransaction() : txout.nValue too high"));
         nValueOut += txout.nValue;
         if (!MoneyRange(nValueOut))
@@ -540,12 +540,12 @@ int64 CTransaction::GetMinFee(unsigned int nBlockSize, bool fAllowFree,
     if (nBlockSize != 1 && nNewBlockSize >= MAX_BLOCK_SIZE_GEN/2)
     {
         if (nNewBlockSize >= MAX_BLOCK_SIZE_GEN)
-            return ((int)nBestHeight > FORK_HEIGHT ? MAX_MONEY_2 : MAX_MONEY);
+            return MAX_MONEY;
         nMinFee *= MAX_BLOCK_SIZE_GEN / (MAX_BLOCK_SIZE_GEN - nNewBlockSize);
     }
 
     if (!MoneyRange(nMinFee))
-        nMinFee = ((int)nBestHeight > FORK_HEIGHT ? MAX_MONEY_2 : MAX_MONEY);
+        nMinFee = MAX_MONEY;
     return nMinFee;
 }
 
@@ -980,7 +980,6 @@ return nMaxMintProofOfWork; // totally ignore all that diff malarkey above
 // stronghands: miner's coin stake is rewarded based on coin age spent (coin-days)
 int64 GetProofOfStakeReward(int64 nCoinAge)
 {
-	
     static int64 nRewardCoinYear = 1200 * CENT;  // creation amount per coin-year
     int64 nMaxMintProofOfStake = 2000000000 * COIN;
 
@@ -1046,8 +1045,6 @@ unsigned int static GetNextTargetRequired(const CBlockIndex* pindexLast, bool fP
     CBigNum bnNew;
     bnNew.SetCompact(pindexPrev->nBits);
     int64 nTargetSpacing = fProofOfStake? STAKE_TARGET_SPACING : min(nTargetSpacingWorkMax, (int64) STAKE_TARGET_SPACING * (1 + pindexLast->nHeight - pindexPrev->nHeight));
-    if (nBestHeight > 4100 )
-    	nTargetSpacing = nTargetSpacing / 3;
     int64 nInterval = nTargetTimespan / nTargetSpacing;
     bnNew *= ((nInterval - 1) * nTargetSpacing + nActualSpacing + nActualSpacing);
     bnNew /= ((nInterval + 1) * nTargetSpacing);
